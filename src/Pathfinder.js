@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import Node from './Node';
 import './Node.css';
+import { dijkstra } from './Dijkstra';
+
+
+const START_NODE_ROW = 10;
+const START_NODE_COL = 15;
+const FINISH_NODE_ROW = 10;
+const FINISH_NODE_COL = 35;
 
 class Pathfinder extends Component {
 
@@ -8,8 +15,23 @@ class Pathfinder extends Component {
     super(props);
 
     this.state = {
-      nodes: []
+      nodes: [],
+      
+
     }
+    
+    this.startSearch = this.startSearch.bind(this)
+  }
+
+  
+
+  startSearch () {
+    const {nodes} = this.state;
+    let startNode = nodes[START_NODE_ROW][START_NODE_COL];
+    let finishNode = nodes[FINISH_NODE_ROW][FINISH_NODE_COL];
+    console.log('search started')
+     dijkstra(this.state.nodes, startNode, finishNode);
+    
   }
 
   componentDidMount () {
@@ -23,10 +45,10 @@ class Pathfinder extends Component {
         const currentNode = {
           col, 
           row,
-        isStart: row===10 && col===30,
-        isFinish:  row===20 && col===4,
+        isStart: row===2 && col===2,
+        isFinish: row===12 && col===22
       };
-        currentRow.push([currentNode]);
+        currentRow.push(currentNode);
       }
       nodes.push(currentRow);
     }
@@ -40,8 +62,10 @@ class Pathfinder extends Component {
     console.log(nodes);
 
     return (
+      <div>
+      
       <div className="grid">
-
+      <button onClick={this.startSearch}>Start search</button>
          {nodes.map((row, rowIdx) => {
 
   return ( 
@@ -50,15 +74,19 @@ class Pathfinder extends Component {
       const { isStart, isFinish } = node;
       return (
     <Node
-      key ={nodeIdx}
+      key={nodeIdx}
       isStart={isStart}
       isFinish={isFinish}
+      isVisited={false}
+      distance={Infinity}
+      isWall={false}
     />
     );
     })}
   </div>
     );
   })}
+  </div>
   </div>
    );
   }
